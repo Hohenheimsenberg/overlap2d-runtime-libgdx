@@ -126,6 +126,10 @@ public class CompositeItem extends Group implements IBaseItem {
         clr[3] = tint.a;
         this.getDataVO().tint = clr;
         this.setColor(tint);
+        
+        for(Actor child : getChildren()) {
+        	child.setColor(tint);
+        }
     }
 
     /**

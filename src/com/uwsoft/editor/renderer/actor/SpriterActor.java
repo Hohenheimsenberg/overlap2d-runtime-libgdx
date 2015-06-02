@@ -121,6 +121,7 @@ public class SpriterActor extends Actor implements IBaseItem {
         player.setScale(dataVO.scale * this.mulX);
         player.rotate(getRotation() - player.getAngle());
         player.update();
+        drawer.setColor(this.getColor().r,this.getColor().g,this.getColor().b, 1);
         drawer.beforeDraw(player, batch);
 
     }
