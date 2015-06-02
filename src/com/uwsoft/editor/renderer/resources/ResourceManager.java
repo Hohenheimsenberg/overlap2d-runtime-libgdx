@@ -199,24 +199,35 @@ public class ResourceManager implements IResourceLoader, IResourceRetriever {
         fontsToLoad.clear();
 
         for (String preparedSceneName : preparedSceneNames) {
-            CompositeVO composite = loadedSceneVOs.get(preparedSceneName).composite;
-            if (composite == null) {
+        	SceneVO sceneVO = loadedSceneVOs.get(preparedSceneName);
+            CompositeVO sceneComposite = sceneVO.composite;
+            if (sceneComposite == null) {
                 continue;
             }
             //
-            String[] particleEffects = composite.getRecursiveParticleEffectsList();
-            String[] spineAnimations = composite.getRecursiveSpineAnimationList();
-            String[] spriteAnimations = composite.getRecursiveSpriteAnimationList();
-            String[] spriterAnimations = composite.getRecursiveSpriterAnimationList();
-            FontSizePair[] fonts = composite.getRecursiveFontList();
-            for(CompositeItemVO library : loadedSceneVOs.get(preparedSceneName).libraryItems.values()) {
-                FontSizePair[] libFonts = library.composite.getRecursiveFontList();
-                Collections.addAll(fontsToLoad, libFonts);
+            String[] particleEffects = sceneComposite.getRecursiveParticleEffectsList();
+            String[] spineAnimations = sceneComposite.getRecursiveSpineAnimationList();
+            String[] spriteAnimations = sceneComposite.getRecursiveSpriteAnimationList();
+            String[] spriterAnimations = sceneComposite.getRecursiveSpriterAnimationList();
+            FontSizePair[] fonts = sceneComposite.getRecursiveFontList();
+            
+            //Load from library
+            for(CompositeItemVO libraryItem : sceneVO.libraryItems.values()) {
+                FontSizePair[] libraryFonts = libraryItem.composite.getRecursiveFontList();
+            	String[] libraryParticleEffects = libraryItem.composite.getRecursiveParticleEffectsList();
+                String[] librarySpineAnimations = libraryItem.composite.getRecursiveSpineAnimationList();
+                String[] librarySpriteAnimations = libraryItem.composite.getRecursiveSpriteAnimationList();
+                String[] librarySpriterAnimations = libraryItem.composite.getRecursiveSpriterAnimationList();
 
-                // loading particle effects used in library items
-                String[] libEffects = library.composite.getRecursiveParticleEffectsList();
-                Collections.addAll(particleEffectNamesToLoad, libEffects);
+                Collections.addAll(particleEffectNamesToLoad, libraryParticleEffects);
+                Collections.addAll(spineAnimNamesToLoad, librarySpineAnimations);
+                Collections.addAll(spriteAnimNamesToLoad, librarySpriteAnimations);
+                Collections.addAll(spriterAnimNamesToLoad, librarySpriterAnimations);
+                Collections.addAll(fontsToLoad, libraryFonts);
             }
+            
+//            for(CompositeItemVO item : sceneVO.libraryItems.values()) {
+//            }
 
             //
             Collections.addAll(particleEffectNamesToLoad, particleEffects);
