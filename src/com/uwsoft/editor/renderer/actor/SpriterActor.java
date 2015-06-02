@@ -123,7 +123,6 @@ public class SpriterActor extends Actor implements IBaseItem {
         player.update();
         drawer.setColor(this.getColor().r,this.getColor().g,this.getColor().b, 1);
         drawer.beforeDraw(player, batch);
-
     }
     @Override
     public void renew() {
@@ -241,7 +240,8 @@ public class SpriterActor extends Actor implements IBaseItem {
 
 	@Override
 	public void dispose() {
-		loader.dispose();		
+		if(!loader.isDisposed())
+			loader.dispose();		
 	}
 
 	public ArrayList<String> getAnimations() {		
