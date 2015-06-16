@@ -3,6 +3,7 @@ package com.uwsoft.editor.renderer;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -168,11 +169,15 @@ public class SceneLoader {
      */
     public void removeMissingImages(CompositeVO vo) {
         if(vo == null) return;
-        for(SimpleImageVO img: vo.sImages) {
-            if(essentials.rm.getTextureRegion(img.imageName) == null) {
-                vo.sImages.remove(img);
-            }
+       
+        Iterator<SimpleImageVO> it = vo.sImages.iterator();
+        while(it.hasNext()) {
+        	SimpleImageVO img = it.next();
+        	 if(essentials.rm.getTextureRegion(img.imageName) == null) {
+        		 it.remove();
+        	 }
         }
+        
         for(CompositeItemVO cmp: vo.sComposites) {
             removeMissingImages(cmp.composite);
         }
