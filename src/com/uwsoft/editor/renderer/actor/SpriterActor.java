@@ -2,6 +2,7 @@ package com.uwsoft.editor.renderer.actor;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -9,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.brashmonkey.spriter.*;
+import com.brashmonkey.spriter.Mainline.Key;
+import com.brashmonkey.spriter.Player.PlayerListener;
 import com.uwsoft.editor.renderer.data.Essentials;
 import com.uwsoft.editor.renderer.data.MainItemVO;
 import com.uwsoft.editor.renderer.data.SpriterVO;
@@ -45,6 +48,8 @@ public class SpriterActor extends Actor implements IBaseItem {
     private int currentEntityIndex	=	0;
     private int currentAnimationIndex;
 	private LibGdxLoader loader;
+	private int previousAnimationIndex;
+	private int timesToRepeat;
 
     public SpriterActor(SpriterVO vo, Essentials e, CompositeItem parent) {
         this(vo, e);
@@ -81,12 +86,46 @@ public class SpriterActor extends Actor implements IBaseItem {
 		drawer = new LibGdxDrawer(loader, renderer);
 		currentAnimationIndex	=	dataVO.animation;	
 		currentEntityIndex		=	dataVO.entity;	
+		previousAnimationIndex = currentAnimationIndex;
+		timesToRepeat = 0;
 		initPlayer();
     }
 
     private void initPlayer() {
     	player = new Player(data.getEntity(currentEntityIndex));
+    	player.addListener(new PlayerListener() {	
 
+			@Override
+			public void preProcess(Player player) {
+				// TODO Auto-generated method stub				
+			}
+			
+			@Override
+			public void postProcess(Player player) {
+				// TODO Auto-generated method stub				
+			}
+			
+			@Override
+			public void mainlineKeyChanged(Key prevKey, Key newKey) {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void animationFinished(Animation animation) {
+				if(timesToRepeat <= 0) {
+					currentAnimationIndex	=	previousAnimationIndex;
+					setAnimation(currentAnimationIndex);
+				}else {
+					timesToRepeat--;
+				}
+			}
+			
+			@Override
+			public void animationChanged(Animation oldAnim, Animation newAnim) {
+				// TODO Auto-generated method stub				
+			}
+		});
+		
     	player.setAnimation(currentAnimationIndex);
     	player.setScale(dataVO.scale * this.mulX);
 
@@ -251,9 +290,25 @@ public class SpriterActor extends Actor implements IBaseItem {
         return animations;
     }
 
-	public void setAnimation(int i) {
+	public void repeatAnimation(int i, int times) {
+		if(timesToRepeat < 0) {
+			previousAnimationIndex = currentAnimationIndex;
+		}
+		timesToRepeat = times;
 		currentAnimationIndex	=	i;
-        	player.setAnimation(i);
+    	player.setAnimation(i);
+		Gdx.app.debug("Current", String.valueOf(currentAnimationIndex));
+		Gdx.app.debug("Previous", String.valueOf(previousAnimationIndex));
+	}
+	
+	public void playAnimation(int i) {		
+		repeatAnimation(i, 0);
+	}
+	
+	public void setAnimation(int i) {
+		timesToRepeat = 0;
+		currentAnimationIndex	=	i;
+        player.setAnimation(i);
 	}
 	public void setEntity(int i) {
 		currentEntityIndex	=	i;	
