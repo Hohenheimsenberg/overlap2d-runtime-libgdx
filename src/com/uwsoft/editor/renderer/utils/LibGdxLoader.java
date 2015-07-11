@@ -2,6 +2,8 @@ package com.uwsoft.editor.renderer.utils;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -10,6 +12,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -92,7 +95,7 @@ public class LibGdxLoader extends Loader<Sprite> implements Disposable{
 	@Override
 	public void dispose() {
 		if(this.pack && this.packer != null) this.packer.dispose();
-		else this.disposeNonPackedTextures();
+		else this.disposeNonPackedTextures();		
 		super.dispose();
 	}
 	
@@ -100,9 +103,7 @@ public class LibGdxLoader extends Loader<Sprite> implements Disposable{
 		Set<FileReference> refs = this.resources.keySet();
 		for(FileReference ref: refs){
 			Pixmap pix = this.pixmaps.get(ref);
-			this.pixmapsToDispose.put(pix, false);
-			this.createSprite(ref, pix);
-			
+			this.createSprite(ref, pix);			
 			if(this.packer != null)	packer.pack(data.getFile(ref).name, pix);
 		}
 		if(this.pack) generatePackedSprites();
@@ -119,20 +120,12 @@ public class LibGdxLoader extends Loader<Sprite> implements Disposable{
 		pixmapsToDispose.put(image, true);
 	}
 	
-	protected void disposePixmaps(){
-		Pixmap[] maps = new Pixmap[this.pixmapsToDispose.size()];
-		this.pixmapsToDispose.keySet().toArray(maps);
-		for(Pixmap pix: maps){
-			try{
-				while(pixmapsToDispose.get(pix)){
-					pix.dispose();
-					pixmapsToDispose.put(pix, false);
-				}
-			} catch(GdxRuntimeException e){
-				System.err.println("Pixmap was already disposed!");
-			}
-		}
-		pixmapsToDispose.clear();
+	protected void disposePixmaps() {
+ 	    for(Entry<Pixmap, Boolean> entry: pixmapsToDispose.entrySet()) {
+ 	    	entry.getKey().dispose();
+ 	    }
+		pixmaps.clear();
+ 	    pixmapsToDispose.clear();
 	}
 	
 }

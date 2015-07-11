@@ -123,7 +123,7 @@ public class SceneLoader {
         //if(sceneVO.physicsPropertiesVO != null && sceneVO.physicsPropertiesVO.enabled == true)
 
         if(sceneVO.physicsPropertiesVO != null && sceneVO.physicsPropertiesVO.enabled == true) {
-            essentials.world = new World(new Vector2(physicsProperties.gravityX, physicsProperties.gravityY), true);
+            essentials.world = new World(new Vector2(physicsProperties.gravityX, physicsProperties.gravityY), true); 
             essentials.rayHandler.setWorld(essentials.world);
         }
 

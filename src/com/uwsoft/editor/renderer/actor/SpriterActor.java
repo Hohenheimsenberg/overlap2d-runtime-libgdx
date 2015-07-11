@@ -158,7 +158,7 @@ public class SpriterActor extends Actor implements IBaseItem {
         player.setScale(dataVO.scale * this.mulX);
         player.rotate(getRotation() - player.getAngle());
         player.update();
-        drawer.setColor(this.getColor().r,this.getColor().g,this.getColor().b, 1);
+        drawer.setColor(this.getColor().r,this.getColor().g,this.getColor().b,this.getColor().a);
         drawer.beforeDraw(player, batch);
     }
     @Override
@@ -278,7 +278,9 @@ public class SpriterActor extends Actor implements IBaseItem {
 	@Override
 	public void dispose() {
 		if(!loader.isDisposed())
-			loader.dispose();		
+			loader.dispose();	
+		drawer.dispose();
+		data = null;
 	}
 
 	public ArrayList<String> getAnimations() {		
@@ -290,6 +292,12 @@ public class SpriterActor extends Actor implements IBaseItem {
         return animations;
     }
 
+	/**
+	 * Plays animation a number of times.
+	 * 
+	 * @param i
+	 * @param times
+	 */
 	public void repeatAnimation(int i, int times) {
 		if(timesToRepeat < 0) {
 			previousAnimationIndex = currentAnimationIndex;
@@ -297,17 +305,26 @@ public class SpriterActor extends Actor implements IBaseItem {
 		timesToRepeat = times;
 		currentAnimationIndex	=	i;
     	player.setAnimation(i);
-		Gdx.app.debug("Current", String.valueOf(currentAnimationIndex));
-		Gdx.app.debug("Previous", String.valueOf(previousAnimationIndex));
 	}
 	
+	/**
+	 * Plays animation once.
+	 * 
+	 * @param i
+	 */
 	public void playAnimation(int i) {		
 		repeatAnimation(i, 0);
 	}
 	
+	/**
+	 * Plays animation indefinitely.
+	 * 
+	 * @param i
+	 */
 	public void setAnimation(int i) {
 		timesToRepeat = 0;
 		currentAnimationIndex	=	i;
+		previousAnimationIndex = i;
         player.setAnimation(i);
 	}
 	public void setEntity(int i) {

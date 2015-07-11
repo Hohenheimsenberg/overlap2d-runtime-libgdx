@@ -57,8 +57,12 @@ public class LibGdxDrawer extends Drawer<Sprite>{
         sprite.setOrigin(newPivotX, newPivotY);
 		sprite.setRotation(object.angle);
 		
-		sprite.setColor(renderer.getColor().r, renderer.getColor().g, renderer.getColor().b, object.alpha);
+		sprite.setColor(renderer.getColor().r, renderer.getColor().g, renderer.getColor().b, renderer.getColor().a);
 		sprite.setScale(object.scale.x, object.scale.y);
 		sprite.draw(batch);
+	}
+	
+	public void dispose() {
+		renderer.dispose();
 	}
 }

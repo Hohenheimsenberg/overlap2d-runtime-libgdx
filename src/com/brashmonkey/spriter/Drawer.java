@@ -7,6 +7,7 @@ import com.brashmonkey.spriter.Entity.ObjectInfo;
 import com.brashmonkey.spriter.Entity.ObjectType;
 import com.brashmonkey.spriter.Timeline.Key.Bone;
 import com.brashmonkey.spriter.Timeline.Key.Object;
+import com.sun.javafx.webkit.theme.Renderer;
 
 /**
  * A Drawer is responsible for drawing a {@link Player}.

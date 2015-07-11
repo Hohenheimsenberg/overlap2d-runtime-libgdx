@@ -104,7 +104,7 @@ public class ResourceManager implements IResourceLoader, IResourceRetriever {
     }
 
     /**
-     * Anloads scene from the memory, and clears all the freed assets
+     * Unloads scene from the memory, and clears all the freed assets
      *
      * @param sceneName - scene file name without ".dt" extension
      */
@@ -123,18 +123,18 @@ public class ResourceManager implements IResourceLoader, IResourceRetriever {
         unLoadFonts();
 	}
 
-	private void unLoadFonts() {
+	public void unLoadFonts() {
 		for(BitmapFont font:bitmapFonts.values()) {
 			font.dispose();
 		}
 		bitmapFonts.clear();
 	}
 
-	private void unLoadSpriterAnimations() {
+	public void unLoadSpriterAnimations() {
 		spriterAnimations.clear();
 	}
 
-	private void unLoadSpriteAnimations() {
+	public void unLoadSpriteAnimations() {
 		for(TextureAtlas texture:spriteAnimations.values()) {
 			texture.dispose();
 		}
@@ -295,7 +295,7 @@ public class ResourceManager implements IResourceLoader, IResourceRetriever {
 
         for (String name : spriteAnimNamesToLoad) {
             TextureAtlas animAtlas = new TextureAtlas(Gdx.files.internal(packResolutionName + File.separator + spriteAnimationsPath + File.separator + name + File.separator + name + ".atlas"));
-            spriteAnimations.put(name, animAtlas);
+            spriteAnimations.put(name, animAtlas); 
         }
     }
     @Override
@@ -376,7 +376,7 @@ public class ResourceManager implements IResourceLoader, IResourceRetriever {
         FileHandle fontFile;
         fontFile = Gdx.files.internal(fontsPath + File.separator + pair.fontName + ".ttf");
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter(); 
         parameter.size = Math.round(pair.fontSize * resMultiplier);
         BitmapFont font = generator.generateFont(parameter);
         bitmapFonts.put(pair, font);
@@ -461,7 +461,7 @@ public class ResourceManager implements IResourceLoader, IResourceRetriever {
     }
 
     public void dispose() {
-        mainPack.dispose();
+       unLoadAssets();
     }
 
 	@Override
