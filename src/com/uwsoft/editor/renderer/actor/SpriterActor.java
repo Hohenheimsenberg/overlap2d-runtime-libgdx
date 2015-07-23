@@ -80,7 +80,7 @@ public class SpriterActor extends Actor implements IBaseItem {
 
         FileHandle handle 	=	essentials.rm.getSCMLFile(dataVO.animationName);
         data 			= 	new SCMLReader(handle.read()).getData();		
-		loader = 	new LibGdxLoader(data);
+		loader = 	new LibGdxLoader(data, false);
 		loader.load(handle.file());
 		ShapeRenderer renderer	=	new ShapeRenderer();
 		drawer = new LibGdxDrawer(loader, renderer);
