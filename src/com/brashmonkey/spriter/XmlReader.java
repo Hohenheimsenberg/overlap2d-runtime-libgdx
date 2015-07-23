@@ -1,5 +1,6 @@
 package com.brashmonkey.spriter;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,10 +27,11 @@ public class XmlReader {
 	}
 
 	public Element parse (Reader reader) throws IOException {
+		BufferedReader br = new BufferedReader(reader);  
 		char[] data = new char[1024];
 		int offset = 0;
 		while (true) {
-			int length = reader.read(data, offset, data.length - offset);
+			int length = br.read(data, offset, data.length - offset);
 			if (length == -1) break;
 			if (length == 0) {
 				char[] newData = new char[data.length * 2];
@@ -38,6 +40,7 @@ public class XmlReader {
 			} else
 				offset += length;
 		}
+		br.close();
 		return parse(data, 0, offset);
 	}
 
